@@ -1,0 +1,16 @@
+export const HttpStatus = {
+  Ok: 200,
+  Created: 201,
+  NoContent: 204,
+  Redirect: 301,
+  NewLocation: 302,
+  NotFound: 404,
+  BadRequest: 400,
+  Unauthorized: 401,
+  Forbidden: 403,
+  Conflict: 409,
+  UnprocessableEntity: 422,
+  ToManyRequests: 429,
+  InternalServerError: 500,
+  ServiceUnavailable: 503,
+};
