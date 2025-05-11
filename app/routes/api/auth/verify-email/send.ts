@@ -12,7 +12,12 @@ import {
   getCoolDownTimeForEmailVerification,
   resolveBaseUrl,
 } from "../../-helpers";
-import { okResponse } from "../../-helpers/responses";
+import {
+  badRequestResponse,
+  okResponse,
+  tooManyRequestsResponse,
+} from "../../-helpers/responses";
+import { ErrorCodes } from "@/definitions/enums/common";
 
 export const APIRoute = createAPIFileRoute("/api/auth/verify-email/send")({
   POST: async ({ request }) => {
@@ -33,7 +38,7 @@ export const APIRoute = createAPIFileRoute("/api/auth/verify-email/send")({
 
     if (!userExists)
       return json(
-        { message: "User not found!" },
+        { message: "User not found!", code: ErrorCodes.NotFound },
         { status: HttpStatus.NotFound },
       );
 
@@ -44,7 +49,10 @@ export const APIRoute = createAPIFileRoute("/api/auth/verify-email/send")({
     });
 
     if (verificationExists && verificationExists.isVerified) {
-      return okResponse("Email already verified!");
+      return badRequestResponse({
+        message: "Email already verified!",
+        code: ErrorCodes.AlreadyDone,
+      });
     }
 
     if (!verificationExists) {
@@ -72,6 +80,7 @@ export const APIRoute = createAPIFileRoute("/api/auth/verify-email/send")({
 
     let coolDownTime = COOL_DOWN_TIME[0];
 
+    // reevaluate coolDownTime based on number of attempts and last attempt time
     if (verificationExists) {
       coolDownTime = getCoolDownTimeForEmailVerification(
         verificationExists.lastAttemptAt,
@@ -79,8 +88,8 @@ export const APIRoute = createAPIFileRoute("/api/auth/verify-email/send")({
       );
     }
 
-    // generate token and send verification
-    if (coolDownTime === 0) {
+    // generate token and send verification when coolDownTime is 0 or verification doesn't exist before (first time)
+    if (coolDownTime === 0 || !verificationExists) {
       const generatedToken = generateSecretToken(userExists.id);
       await db.token.create({
         data: {
@@ -115,9 +124,19 @@ export const APIRoute = createAPIFileRoute("/api/auth/verify-email/send")({
       });
     }
 
-    if (coolDownTime > 0)
-      return okResponse(`Too Many Attempts! Please wait.`, { coolDownTime });
+    if (coolDownTime > 0 && verificationExists)
+      return tooManyRequestsResponse(
+        {
+          message: "Already sent! Please wait.",
+          code: ErrorCodes.RateLimit,
+        },
+        {
+          coolDownTime,
+        },
+      );
 
-    return okResponse("Email sent successfully!", { coolDownTime });
+    return okResponse("Email sent successfully!", {
+      coolDownTime: COOL_DOWN_TIME[verificationExists?.attempts || 0],
+    });
   },
 });

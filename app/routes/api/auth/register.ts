@@ -1,15 +1,15 @@
 import { registerSchema } from "@/lib/validation-schemas/auth";
-import { json } from "@tanstack/react-start";
 import { createAPIFileRoute } from "@tanstack/react-start/api";
-import { HttpStatus } from "../-helpers/http-status";
-import { badRequestResponse, createdResponse } from "../-helpers/responses";
+import {
+  badRequestResponse,
+  createdResponse,
+  unprocessableContentResponse,
+} from "../-helpers/responses";
 import { createHash } from "@/lib/bcryptjs";
 
 import db from "@/prisma";
-import { generateSecretToken } from "@/lib/token";
-import { sendEmailVerificationMailer } from "../-helpers/mailer";
-import { EmailVerificationMailerPayload } from "@/definitions/types/auth";
-import { TokenPurpose } from "@prisma/client";
+import { ErrorCodes } from "@/definitions/enums/common";
+import { makeValidationErrors } from "../-helpers/make-validation-errors";
 
 export const APIRoute = createAPIFileRoute("/api/auth/register")({
   POST: async ({ request }) => {
@@ -18,9 +18,13 @@ export const APIRoute = createAPIFileRoute("/api/auth/register")({
     const validationResults = registerSchema.safeParse(body);
 
     if (!validationResults.success)
-      return json(validationResults.error.flatten().fieldErrors, {
-        status: HttpStatus.BadRequest,
-      });
+      return unprocessableContentResponse(
+        {
+          message: "Invalid request body!",
+          code: ErrorCodes.InvalidParams,
+        },
+        makeValidationErrors(validationResults.error),
+      );
 
     const parsedBody = validationResults.data;
 
@@ -30,7 +34,11 @@ export const APIRoute = createAPIFileRoute("/api/auth/register")({
       },
     });
 
-    if (isEmailExists) return badRequestResponse("Email already exists!");
+    if (isEmailExists)
+      return badRequestResponse({
+        message: "Email already exists!",
+        code: ErrorCodes.AlreadyExists,
+      });
 
     const hashedPassword = await createHash(parsedBody.password);
 
@@ -49,7 +57,11 @@ export const APIRoute = createAPIFileRoute("/api/auth/register")({
       },
     });
 
-    if (!createdUser) return badRequestResponse("Unable to register user!");
+    if (!createdUser)
+      return badRequestResponse({
+        message: "Unable to register user!",
+        code: ErrorCodes.UnknownError,
+      });
 
     // send async mail to user for verify email address
     // const generatedToken = generateSecretToken(createdUser.id);

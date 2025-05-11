@@ -19,8 +19,6 @@ export type RegisterResponse = {
   lastName: string;
 };
 
-export type SendVerificationEmailResponse =
-  | {
-      coolDownTime: number;
-    }
-  | undefined;
+export type SendVerificationEmailResponse = {
+  coolDownTime: number;
+};

@@ -1,10 +1,9 @@
 import { LoginBody, loginSchema } from "@/lib/validation-schemas/auth";
-import { json } from "@tanstack/react-start";
 import { createAPIFileRoute } from "@tanstack/react-start/api";
 import {
   notFoundResponse,
   okResponse,
-  unprocessableEntityResponse,
+  unprocessableContentResponse,
 } from "../-helpers/responses";
 import { compareHash } from "@/lib/bcryptjs";
 import { AuthPayload } from "@/definitions/types/auth";
@@ -13,6 +12,8 @@ import { setCookie } from "@tanstack/react-start/server";
 
 import db from "@/prisma";
 import { makeValidationErrors } from "../-helpers/make-validation-errors";
+import { ErrorCodes } from "@/definitions/enums/common";
+import { makeLoginResponse } from "../-helpers/api/auth";
 
 export const APIRoute = createAPIFileRoute("/api/auth/login")({
   POST: async ({ request }) => {
@@ -21,8 +22,8 @@ export const APIRoute = createAPIFileRoute("/api/auth/login")({
     const validationResults = loginSchema.safeParse(body);
 
     if (!validationResults.success)
-      return unprocessableEntityResponse(
-        "Invalid Request!",
+      return unprocessableContentResponse(
+        { message: "Invalid request Body!", code: ErrorCodes.InvalidParams },
         makeValidationErrors<LoginBody>(validationResults.error),
       );
 
@@ -35,7 +36,10 @@ export const APIRoute = createAPIFileRoute("/api/auth/login")({
     });
 
     if (!isUserExists)
-      return notFoundResponse("Email or password is incorrect!");
+      return notFoundResponse({
+        message: "Email or password is incorrect!",
+        code: ErrorCodes.InvalidCredentials,
+      });
 
     const isPasswordMatch = await compareHash(
       parsedBody.password,
@@ -43,29 +47,23 @@ export const APIRoute = createAPIFileRoute("/api/auth/login")({
     );
 
     if (!isPasswordMatch)
-      return notFoundResponse("Email or password is incorrect!");
+      return notFoundResponse({
+        message: "Email or password is incorrect!",
+        code: ErrorCodes.InvalidCredentials,
+      });
 
     // generate token and save to session db
     const payload: AuthPayload = {
       id: isUserExists.id,
     };
 
+    const user = makeLoginResponse(isUserExists);
+
     const tokenAge = 60 * 60 * 24;
 
     const token = signToken(payload, {
       expiresIn: tokenAge * 1000,
     });
-
-    const user = {
-      id: isUserExists.id,
-      email: isUserExists.email,
-      fullName:
-        isUserExists.firstName + isUserExists.lastName
-          ? " " + isUserExists.lastName
-          : "",
-      firstName: isUserExists.firstName,
-      lastName: isUserExists.lastName,
-    };
 
     setCookie("auth-token", token, { maxAge: tokenAge });
     setCookie("auth-user", JSON.stringify(user), { maxAge: tokenAge });
