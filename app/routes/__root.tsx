@@ -34,7 +34,7 @@ function RootComponent() {
     <RootDocument>
       <TooltipProvider>
         <Outlet />
-        <Toaster position="bottom-right" />
+        <Toaster position="top-right" />
       </TooltipProvider>
     </RootDocument>
   );

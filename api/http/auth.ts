@@ -74,7 +74,7 @@ export const authHttp = {
       config: { skipAuth: true },
     }),
   verifyEmail: (body: VerifyEmailBody) =>
-    queryHelper({
+    queryHelper<VerifyEmailBody, ApiResponse>({
       method: "post",
       url: AUTH.VERIFY_EMAIL,
       data: body,

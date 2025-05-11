@@ -1,4 +1,6 @@
 import { authHelpers } from "@/api/helpers/auth";
+import { ErrorCodes } from "@/definitions/enums/common";
+import { errorToast, successToast } from "@/lib/toast";
 import { verifyEmailSchema } from "@/lib/validation-schemas/auth";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect } from "react";
@@ -16,18 +18,30 @@ function VerifyEmailPage() {
   useEffect(() => {
     const handleVerifyEmail = async () => {
       try {
-        await mutateAsync(search);
+        const response = await mutateAsync(search);
+        successToast(response.message);
         navigate({
           to: "/auth/verify-email/$status",
           params: { status: "success" },
           replace: true,
         });
       } catch (error) {
+        if (error.code === ErrorCodes.AlreadyDone) {
+          navigate({
+            to: "/auth/verify-email/$status",
+            params: { status: "success" },
+            replace: true,
+          });
+          successToast(error.message);
+          return;
+        }
+        
         navigate({
           to: "/auth/verify-email/$status",
           params: { status: "error" },
           replace: true,
         });
+        errorToast(error.message);
       }
     };
     handleVerifyEmail();

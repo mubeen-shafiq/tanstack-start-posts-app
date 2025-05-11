@@ -66,18 +66,6 @@ export const APIRoute = createAPIFileRoute("/api/auth/verify-email/send")({
       });
     }
 
-    // delete previous tokens if exists
-    if (verificationExists) {
-      await db.token.deleteMany({
-        where: {
-          AND: [
-            { userId: userExists.id },
-            { purpose: TokenPurpose.VerifyEmail },
-          ],
-        },
-      });
-    }
-
     let coolDownTime = COOL_DOWN_TIME[0];
 
     // reevaluate coolDownTime based on number of attempts and last attempt time
@@ -88,16 +76,29 @@ export const APIRoute = createAPIFileRoute("/api/auth/verify-email/send")({
       );
     }
 
+    // delete previous tokens only when coolDownTime is 0 (new will be generated)
+    if (verificationExists && coolDownTime === 0) {
+      await db.token.deleteMany({
+        where: {
+          AND: [
+            { userId: userExists.id },
+            { purpose: TokenPurpose.VerifyEmail },
+          ],
+        },
+      });
+    }
+
     // generate token and send verification when coolDownTime is 0 or verification doesn't exist before (first time)
     if (coolDownTime === 0 || !verificationExists) {
       const generatedToken = generateSecretToken(userExists.id);
-      await db.token.create({
+      const createdToken = await db.token.create({
         data: {
           userId: userExists.id,
           purpose: TokenPurpose.VerifyEmail,
           token: generatedToken,
         },
       });
+      console.log("🚀 ~ POST: ~ createdToken:", createdToken);
       sendEmailVerificationMailer({
         name: makeFullName(userExists.firstName, userExists.lastName),
         redirectUrl: resolveBaseUrl(
