@@ -26,6 +26,7 @@ import { Link, useNavigate } from "@tanstack/react-router";
 import { authHelpers } from "@/api/helpers/auth";
 import { errorToast, successToast } from "@/lib/toast";
 import { setValidations } from "@/lib/utils/set-validations";
+import { ErrorCodes } from "@/definitions/enums/common";
 
 export const LoginForm = ({ redirectFrom }: { redirectFrom?: string }) => {
   const loginMutation = authHelpers.useLoginMutation();
@@ -46,8 +47,17 @@ export const LoginForm = ({ redirectFrom }: { redirectFrom?: string }) => {
         replace: true,
       });
     } catch (error) {
+      if (error.code === ErrorCodes.InvalidCredentials) {
+        errorToast("Email or password is incorrect!");
+        return;
+      }
+      if (error.code === ErrorCodes.InvalidParams) {
+        errorToast("Invalid form inputs. Please verify!");
+        setValidations(form.setError, error.details);
+        return;
+      }
+
       errorToast(error.message);
-      setValidations(form.setError, error.details);
     }
   };
   return (

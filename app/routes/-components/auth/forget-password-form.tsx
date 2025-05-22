@@ -18,16 +18,20 @@ import {
   FormProvider,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { ErrorCodes } from "@/definitions/enums/common";
 import { forgetPasswordInitialValues } from "@/lib/initial-values/auth";
-import { successToast } from "@/lib/toast";
+import { errorToast, successToast } from "@/lib/toast";
+import { setValidations } from "@/lib/utils/set-validations";
 import {
   ForgetPasswordBody,
   forgetPasswordSchema,
 } from "@/lib/validation-schemas/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useNavigate } from "@tanstack/react-router";
 import { useForm } from "react-hook-form";
 
 export const ForgetPasswordForm = () => {
+  const navigate = useNavigate({ from: "/auth/forget-password" });
   const formMethods = useForm({
     mode: "onBlur",
     defaultValues: forgetPasswordInitialValues,
@@ -37,12 +41,22 @@ export const ForgetPasswordForm = () => {
   const { mutateAsync } = authHelpers.useForgetPasswordMutation();
 
   const onSubmitHandler = async (data: ForgetPasswordBody) => {
-    console.log("🚀 ~ onSubmitHandler ~ data:", data);
     try {
       const response = await mutateAsync(data);
       successToast(response.message);
+      navigate({ to: "success" });
     } catch (error) {
-      console.log(error);
+      if (error.code === ErrorCodes.NotFound) {
+        errorToast("We are unable to find user against this email!");
+        return;
+      }
+      if (error.code === ErrorCodes.InvalidParams) {
+        errorToast("Invalid form input. Please verify!");
+        setValidations(formMethods.setError, error.details);
+        return;
+      }
+
+      errorToast(error.message);
     }
   };
 
@@ -80,7 +94,12 @@ export const ForgetPasswordForm = () => {
                 </FormItem>
               )}
             />
-            <Button type="submit" block>
+            <Button
+              type="submit"
+              disabled={formMethods.formState.isSubmitting}
+              loading={formMethods.formState.isSubmitting}
+              block
+            >
               Submit
             </Button>
           </Form>

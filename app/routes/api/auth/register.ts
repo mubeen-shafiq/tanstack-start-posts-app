@@ -63,24 +63,6 @@ export const APIRoute = createAPIFileRoute("/api/auth/register")({
         code: ErrorCodes.UnknownError,
       });
 
-    // send async mail to user for verify email address
-    // const generatedToken = generateSecretToken(createdUser.id);
-    // await db.token.create({
-    //   data: {
-    //     token: generatedToken,
-    //     purpose: TokenPurpose.VerifyEmail,
-    //     userId: createdUser.id,
-    //   },
-    // });
-
-    // const emailPayload: EmailVerificationMailerPayload = {
-    //   redirectUrl: `${process.env.BASE_URL}/auth/verify-email?token=${generatedToken}`,
-    //   to: parsedBody.email,
-    //   name: `${parsedBody.firstName} ${parsedBody.lastName}`,
-    // };
-
-    // sendEmailVerificationMailer(emailPayload);
-
     return createdResponse("User registered successfully!", createdUser);
   },
 });

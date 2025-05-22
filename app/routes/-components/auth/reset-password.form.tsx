@@ -18,19 +18,23 @@ import {
   FormProvider,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { ErrorCodes } from "@/definitions/enums/common";
 import { resetPasswordInitialValues } from "@/lib/initial-values/auth";
-import { successToast } from "@/lib/toast";
+import { errorToast, successToast } from "@/lib/toast";
+import { setValidations } from "@/lib/utils/set-validations";
 import {
   ResetPasswordBody,
   resetPasswordSchema,
 } from "@/lib/validation-schemas/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useNavigate } from "@tanstack/react-router";
 import { useForm } from "react-hook-form";
 
-export const ResetPasswordForm = () => {
+export const ResetPasswordForm = ({ token }: { token: string }) => {
+  const navigate = useNavigate({ from: "/auth/reset-password" });
   const formMethods = useForm({
     mode: "onBlur",
-    defaultValues: resetPasswordInitialValues,
+    defaultValues: { ...resetPasswordInitialValues, token },
     resolver: zodResolver(resetPasswordSchema),
   });
 
@@ -40,8 +44,22 @@ export const ResetPasswordForm = () => {
     try {
       const response = await mutateAsync(data);
       successToast(response.message);
+      navigate({ to: "/auth/reset-password/success", replace: true });
     } catch (error) {
-      console.log(error);
+      if (
+        error.code === ErrorCodes.NotFound ||
+        error.code === ErrorCodes.InvalidToken
+      ) {
+        errorToast("We are unable to process this request! Please try again.");
+        return;
+      }
+      if (error.code === ErrorCodes.InvalidParams) {
+        errorToast("Invalid form input. Please verify!");
+        setValidations(formMethods.setError, error.details);
+        return;
+      }
+
+      errorToast(error.message);
     }
   };
 
@@ -64,10 +82,10 @@ export const ResetPasswordForm = () => {
               control={formMethods.control}
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Email</FormLabel>
+                  <FormLabel>New Password</FormLabel>
                   <FormControl>
                     <Input
-                      type="email"
+                      type="password"
                       placeholder="Enter your password..."
                       {...field}
                     />
@@ -84,10 +102,10 @@ export const ResetPasswordForm = () => {
               control={formMethods.control}
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Confirm Password</FormLabel>
+                  <FormLabel>Confirm New Password</FormLabel>
                   <FormControl>
                     <Input
-                      type="email"
+                      type="password"
                       placeholder="Confirm your password..."
                       {...field}
                     />
@@ -99,7 +117,12 @@ export const ResetPasswordForm = () => {
                 </FormItem>
               )}
             />
-            <Button type="submit" block>
+            <Button
+              type="submit"
+              disabled={formMethods.formState.isSubmitting}
+              loading={formMethods.formState.isSubmitting}
+              block
+            >
               Reset & Continue
             </Button>
           </Form>

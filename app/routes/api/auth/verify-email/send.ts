@@ -91,14 +91,13 @@ export const APIRoute = createAPIFileRoute("/api/auth/verify-email/send")({
     // generate token and send verification when coolDownTime is 0 or verification doesn't exist before (first time)
     if (coolDownTime === 0 || !verificationExists) {
       const generatedToken = generateSecretToken(userExists.id);
-      const createdToken = await db.token.create({
+      await db.token.create({
         data: {
           userId: userExists.id,
           purpose: TokenPurpose.VerifyEmail,
           token: generatedToken,
         },
       });
-      console.log("🚀 ~ POST: ~ createdToken:", createdToken);
       sendEmailVerificationMailer({
         name: makeFullName(userExists.firstName, userExists.lastName),
         redirectUrl: resolveBaseUrl(

@@ -6,4 +6,5 @@ export enum ErrorCodes {
   InvalidCredentials = "invalid-credentials",
   UnknownError = "unknown-error",
   RateLimit = "rate-limit",
+  InvalidToken = "invalid-token",
 }

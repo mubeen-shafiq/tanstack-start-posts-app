@@ -18,6 +18,7 @@ import {
   FormProvider,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { ErrorCodes } from "@/definitions/enums/common";
 import { registerInitialValues } from "@/lib/initial-values/auth";
 import { errorToast, successToast } from "@/lib/toast";
 import { makeFullName } from "@/lib/utils";
@@ -51,8 +52,17 @@ export const RegisterForm = () => {
         },
       });
     } catch (error) {
+      if (error.code === ErrorCodes.AlreadyExists) {
+        errorToast("Email already exists!");
+        return;
+      }
+      if (error.code === ErrorCodes.InvalidParams) {
+        errorToast("Invalid form input. Please verify!");
+        setValidations(form.setError, error.details);
+        return;
+      }
+
       errorToast(error.message);
-      setValidations(form.setError, error.details);
     }
   };
   return (

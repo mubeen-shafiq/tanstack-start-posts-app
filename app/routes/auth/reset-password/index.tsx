@@ -10,10 +10,11 @@ export const Route = createFileRoute("/auth/reset-password/")({
 });
 
 function ResetPasswordPage() {
+  const { token } = Route.useSearch();
   return (
     <div className="grow flex justify-center items-center">
       <div className="max-w-md w-full mx-auto">
-        <ResetPasswordForm />
+        <ResetPasswordForm token={token} />
       </div>
     </div>
   );
