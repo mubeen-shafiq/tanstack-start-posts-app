@@ -96,11 +96,9 @@ export const LoginForm = ({ redirectFrom }: { redirectFrom?: string }) => {
                   </FormControl>
                   <FormMessage />
                   <FormDescription className="text-end">
-                    <Link to="/auth/forget-password">
-                      <Button type="button" size="sm" variant="link">
-                        Forget Password
-                      </Button>
-                    </Link>
+                    <Button type="button" size="sm" variant="link" asChild>
+                      <Link to="/auth/forget-password">Forget Password</Link>
+                    </Button>
                   </FormDescription>
                 </FormItem>
               )}
@@ -119,16 +117,15 @@ export const LoginForm = ({ redirectFrom }: { redirectFrom?: string }) => {
       <CardFooter>
         <p className="text-muted-foreground text-sm">
           Don&apos;t have an account?{" "}
-          <Link to="/auth/register">
-            <Button
-              type="button"
-              variant="link"
-              size="sm"
-              className="ms-0.5 px-0"
-            >
-              Register
-            </Button>
-          </Link>
+          <Button
+            type="button"
+            variant="link"
+            size="sm"
+            className="ms-0.5 px-1"
+            asChild
+          >
+            <Link to="/auth/register">Register</Link>
+          </Button>
         </p>
       </CardFooter>
     </Card>

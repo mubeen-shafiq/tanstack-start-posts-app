@@ -153,16 +153,15 @@ export const RegisterForm = () => {
       <CardFooter>
         <p className="text-muted-foreground text-sm">
           Already have an account?{" "}
-          <Link to="/auth/login">
-            <Button
-              type="button"
-              variant="link"
-              size="sm"
-              className="ms-0.5 px-0"
-            >
-              Login
-            </Button>
-          </Link>
+          <Button
+            type="button"
+            variant="link"
+            size="sm"
+            className="ms-0.5 px-1"
+            asChild
+          >
+            <Link to="/auth/login">Login</Link>
+          </Button>
         </p>
       </CardFooter>
     </Card>
