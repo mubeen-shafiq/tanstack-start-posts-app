@@ -20,7 +20,7 @@ function AppLayout() {
   return (
     <div className="min-h-screen flex flex-col">
       <AppNavbar />
-      <main className="py-5 flex flex-col container grow">
+      <main className="flex flex-col grow">
         <Outlet />
       </main>
       <AppFooter />
