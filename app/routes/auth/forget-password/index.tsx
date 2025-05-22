@@ -1,8 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { authHelpers } from "@/api/helpers/auth";
-import { ForgetPasswordForm } from "../-components/auth/forget-password-form";
+import { ForgetPasswordForm } from "../../-components/auth/forget-password-form";
 
-export const Route = createFileRoute("/auth/forget-password")({
+export const Route = createFileRoute("/auth/forget-password/")({
   component: ForgetPasswordPage,
 });
 

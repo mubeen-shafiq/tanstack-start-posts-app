@@ -14,16 +14,18 @@ import { Route as rootRoute } from './routes/__root'
 import { Route as AuthRouteImport } from './routes/auth/route'
 import { Route as AppRouteImport } from './routes/app/route'
 import { Route as IndexImport } from './routes/index'
-import { Route as AuthResetPasswordImport } from './routes/auth/reset-password'
 import { Route as AuthLoginImport } from './routes/auth/login'
-import { Route as AuthForgetPasswordImport } from './routes/auth/forget-password'
 import { Route as AuthVerifyEmailIndexImport } from './routes/auth/verify-email/index'
+import { Route as AuthResetPasswordIndexImport } from './routes/auth/reset-password/index'
 import { Route as AuthRegisterIndexImport } from './routes/auth/register/index'
+import { Route as AuthForgetPasswordIndexImport } from './routes/auth/forget-password/index'
 import { Route as AppUsersIndexImport } from './routes/app/users/index'
 import { Route as AppPostsIndexImport } from './routes/app/posts/index'
 import { Route as AppHomeIndexImport } from './routes/app/home/index'
 import { Route as AuthVerifyEmailStatusImport } from './routes/auth/verify-email/$status'
+import { Route as AuthResetPasswordSuccessImport } from './routes/auth/reset-password/success'
 import { Route as AuthRegisterSuccessImport } from './routes/auth/register/success'
+import { Route as AuthForgetPasswordSuccessImport } from './routes/auth/forget-password/success'
 import { Route as AppUsersIdIndexImport } from './routes/app/users/$id/index'
 import { Route as AppPostsIdIndexImport } from './routes/app/posts/$id/index'
 import { Route as AppUsersIdEditImport } from './routes/app/users/$id/edit'
@@ -49,21 +51,9 @@ const IndexRoute = IndexImport.update({
   getParentRoute: () => rootRoute,
 } as any)
 
-const AuthResetPasswordRoute = AuthResetPasswordImport.update({
-  id: '/reset-password',
-  path: '/reset-password',
-  getParentRoute: () => AuthRouteRoute,
-} as any)
-
 const AuthLoginRoute = AuthLoginImport.update({
   id: '/login',
   path: '/login',
-  getParentRoute: () => AuthRouteRoute,
-} as any)
-
-const AuthForgetPasswordRoute = AuthForgetPasswordImport.update({
-  id: '/forget-password',
-  path: '/forget-password',
   getParentRoute: () => AuthRouteRoute,
 } as any)
 
@@ -73,9 +63,21 @@ const AuthVerifyEmailIndexRoute = AuthVerifyEmailIndexImport.update({
   getParentRoute: () => AuthRouteRoute,
 } as any)
 
+const AuthResetPasswordIndexRoute = AuthResetPasswordIndexImport.update({
+  id: '/reset-password/',
+  path: '/reset-password/',
+  getParentRoute: () => AuthRouteRoute,
+} as any)
+
 const AuthRegisterIndexRoute = AuthRegisterIndexImport.update({
   id: '/register/',
   path: '/register/',
+  getParentRoute: () => AuthRouteRoute,
+} as any)
+
+const AuthForgetPasswordIndexRoute = AuthForgetPasswordIndexImport.update({
+  id: '/forget-password/',
+  path: '/forget-password/',
   getParentRoute: () => AuthRouteRoute,
 } as any)
 
@@ -103,9 +105,21 @@ const AuthVerifyEmailStatusRoute = AuthVerifyEmailStatusImport.update({
   getParentRoute: () => AuthRouteRoute,
 } as any)
 
+const AuthResetPasswordSuccessRoute = AuthResetPasswordSuccessImport.update({
+  id: '/reset-password/success',
+  path: '/reset-password/success',
+  getParentRoute: () => AuthRouteRoute,
+} as any)
+
 const AuthRegisterSuccessRoute = AuthRegisterSuccessImport.update({
   id: '/register/success',
   path: '/register/success',
+  getParentRoute: () => AuthRouteRoute,
+} as any)
+
+const AuthForgetPasswordSuccessRoute = AuthForgetPasswordSuccessImport.update({
+  id: '/forget-password/success',
+  path: '/forget-password/success',
   getParentRoute: () => AuthRouteRoute,
 } as any)
 
@@ -158,13 +172,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRoute
     }
-    '/auth/forget-password': {
-      id: '/auth/forget-password'
-      path: '/forget-password'
-      fullPath: '/auth/forget-password'
-      preLoaderRoute: typeof AuthForgetPasswordImport
-      parentRoute: typeof AuthRouteImport
-    }
     '/auth/login': {
       id: '/auth/login'
       path: '/login'
@@ -172,11 +179,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthLoginImport
       parentRoute: typeof AuthRouteImport
     }
-    '/auth/reset-password': {
-      id: '/auth/reset-password'
-      path: '/reset-password'
-      fullPath: '/auth/reset-password'
-      preLoaderRoute: typeof AuthResetPasswordImport
+    '/auth/forget-password/success': {
+      id: '/auth/forget-password/success'
+      path: '/forget-password/success'
+      fullPath: '/auth/forget-password/success'
+      preLoaderRoute: typeof AuthForgetPasswordSuccessImport
       parentRoute: typeof AuthRouteImport
     }
     '/auth/register/success': {
@@ -184,6 +191,13 @@ declare module '@tanstack/react-router' {
       path: '/register/success'
       fullPath: '/auth/register/success'
       preLoaderRoute: typeof AuthRegisterSuccessImport
+      parentRoute: typeof AuthRouteImport
+    }
+    '/auth/reset-password/success': {
+      id: '/auth/reset-password/success'
+      path: '/reset-password/success'
+      fullPath: '/auth/reset-password/success'
+      preLoaderRoute: typeof AuthResetPasswordSuccessImport
       parentRoute: typeof AuthRouteImport
     }
     '/auth/verify-email/$status': {
@@ -214,11 +228,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppUsersIndexImport
       parentRoute: typeof AppRouteImport
     }
+    '/auth/forget-password/': {
+      id: '/auth/forget-password/'
+      path: '/forget-password'
+      fullPath: '/auth/forget-password'
+      preLoaderRoute: typeof AuthForgetPasswordIndexImport
+      parentRoute: typeof AuthRouteImport
+    }
     '/auth/register/': {
       id: '/auth/register/'
       path: '/register'
       fullPath: '/auth/register'
       preLoaderRoute: typeof AuthRegisterIndexImport
+      parentRoute: typeof AuthRouteImport
+    }
+    '/auth/reset-password/': {
+      id: '/auth/reset-password/'
+      path: '/reset-password'
+      fullPath: '/auth/reset-password'
+      preLoaderRoute: typeof AuthResetPasswordIndexImport
       parentRoute: typeof AuthRouteImport
     }
     '/auth/verify-email/': {
@@ -286,22 +314,26 @@ const AppRouteRouteWithChildren = AppRouteRoute._addFileChildren(
 )
 
 interface AuthRouteRouteChildren {
-  AuthForgetPasswordRoute: typeof AuthForgetPasswordRoute
   AuthLoginRoute: typeof AuthLoginRoute
-  AuthResetPasswordRoute: typeof AuthResetPasswordRoute
+  AuthForgetPasswordSuccessRoute: typeof AuthForgetPasswordSuccessRoute
   AuthRegisterSuccessRoute: typeof AuthRegisterSuccessRoute
+  AuthResetPasswordSuccessRoute: typeof AuthResetPasswordSuccessRoute
   AuthVerifyEmailStatusRoute: typeof AuthVerifyEmailStatusRoute
+  AuthForgetPasswordIndexRoute: typeof AuthForgetPasswordIndexRoute
   AuthRegisterIndexRoute: typeof AuthRegisterIndexRoute
+  AuthResetPasswordIndexRoute: typeof AuthResetPasswordIndexRoute
   AuthVerifyEmailIndexRoute: typeof AuthVerifyEmailIndexRoute
 }
 
 const AuthRouteRouteChildren: AuthRouteRouteChildren = {
-  AuthForgetPasswordRoute: AuthForgetPasswordRoute,
   AuthLoginRoute: AuthLoginRoute,
-  AuthResetPasswordRoute: AuthResetPasswordRoute,
+  AuthForgetPasswordSuccessRoute: AuthForgetPasswordSuccessRoute,
   AuthRegisterSuccessRoute: AuthRegisterSuccessRoute,
+  AuthResetPasswordSuccessRoute: AuthResetPasswordSuccessRoute,
   AuthVerifyEmailStatusRoute: AuthVerifyEmailStatusRoute,
+  AuthForgetPasswordIndexRoute: AuthForgetPasswordIndexRoute,
   AuthRegisterIndexRoute: AuthRegisterIndexRoute,
+  AuthResetPasswordIndexRoute: AuthResetPasswordIndexRoute,
   AuthVerifyEmailIndexRoute: AuthVerifyEmailIndexRoute,
 }
 
@@ -313,15 +345,17 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/app': typeof AppRouteRouteWithChildren
   '/auth': typeof AuthRouteRouteWithChildren
-  '/auth/forget-password': typeof AuthForgetPasswordRoute
   '/auth/login': typeof AuthLoginRoute
-  '/auth/reset-password': typeof AuthResetPasswordRoute
+  '/auth/forget-password/success': typeof AuthForgetPasswordSuccessRoute
   '/auth/register/success': typeof AuthRegisterSuccessRoute
+  '/auth/reset-password/success': typeof AuthResetPasswordSuccessRoute
   '/auth/verify-email/$status': typeof AuthVerifyEmailStatusRoute
   '/app/home': typeof AppHomeIndexRoute
   '/app/posts': typeof AppPostsIndexRoute
   '/app/users': typeof AppUsersIndexRoute
+  '/auth/forget-password': typeof AuthForgetPasswordIndexRoute
   '/auth/register': typeof AuthRegisterIndexRoute
+  '/auth/reset-password': typeof AuthResetPasswordIndexRoute
   '/auth/verify-email': typeof AuthVerifyEmailIndexRoute
   '/app/posts/$id/edit': typeof AppPostsIdEditRoute
   '/app/users/$id/edit': typeof AppUsersIdEditRoute
@@ -333,15 +367,17 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/app': typeof AppRouteRouteWithChildren
   '/auth': typeof AuthRouteRouteWithChildren
-  '/auth/forget-password': typeof AuthForgetPasswordRoute
   '/auth/login': typeof AuthLoginRoute
-  '/auth/reset-password': typeof AuthResetPasswordRoute
+  '/auth/forget-password/success': typeof AuthForgetPasswordSuccessRoute
   '/auth/register/success': typeof AuthRegisterSuccessRoute
+  '/auth/reset-password/success': typeof AuthResetPasswordSuccessRoute
   '/auth/verify-email/$status': typeof AuthVerifyEmailStatusRoute
   '/app/home': typeof AppHomeIndexRoute
   '/app/posts': typeof AppPostsIndexRoute
   '/app/users': typeof AppUsersIndexRoute
+  '/auth/forget-password': typeof AuthForgetPasswordIndexRoute
   '/auth/register': typeof AuthRegisterIndexRoute
+  '/auth/reset-password': typeof AuthResetPasswordIndexRoute
   '/auth/verify-email': typeof AuthVerifyEmailIndexRoute
   '/app/posts/$id/edit': typeof AppPostsIdEditRoute
   '/app/users/$id/edit': typeof AppUsersIdEditRoute
@@ -354,15 +390,17 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/app': typeof AppRouteRouteWithChildren
   '/auth': typeof AuthRouteRouteWithChildren
-  '/auth/forget-password': typeof AuthForgetPasswordRoute
   '/auth/login': typeof AuthLoginRoute
-  '/auth/reset-password': typeof AuthResetPasswordRoute
+  '/auth/forget-password/success': typeof AuthForgetPasswordSuccessRoute
   '/auth/register/success': typeof AuthRegisterSuccessRoute
+  '/auth/reset-password/success': typeof AuthResetPasswordSuccessRoute
   '/auth/verify-email/$status': typeof AuthVerifyEmailStatusRoute
   '/app/home/': typeof AppHomeIndexRoute
   '/app/posts/': typeof AppPostsIndexRoute
   '/app/users/': typeof AppUsersIndexRoute
+  '/auth/forget-password/': typeof AuthForgetPasswordIndexRoute
   '/auth/register/': typeof AuthRegisterIndexRoute
+  '/auth/reset-password/': typeof AuthResetPasswordIndexRoute
   '/auth/verify-email/': typeof AuthVerifyEmailIndexRoute
   '/app/posts/$id/edit': typeof AppPostsIdEditRoute
   '/app/users/$id/edit': typeof AppUsersIdEditRoute
@@ -376,15 +414,17 @@ export interface FileRouteTypes {
     | '/'
     | '/app'
     | '/auth'
-    | '/auth/forget-password'
     | '/auth/login'
-    | '/auth/reset-password'
+    | '/auth/forget-password/success'
     | '/auth/register/success'
+    | '/auth/reset-password/success'
     | '/auth/verify-email/$status'
     | '/app/home'
     | '/app/posts'
     | '/app/users'
+    | '/auth/forget-password'
     | '/auth/register'
+    | '/auth/reset-password'
     | '/auth/verify-email'
     | '/app/posts/$id/edit'
     | '/app/users/$id/edit'
@@ -395,15 +435,17 @@ export interface FileRouteTypes {
     | '/'
     | '/app'
     | '/auth'
-    | '/auth/forget-password'
     | '/auth/login'
-    | '/auth/reset-password'
+    | '/auth/forget-password/success'
     | '/auth/register/success'
+    | '/auth/reset-password/success'
     | '/auth/verify-email/$status'
     | '/app/home'
     | '/app/posts'
     | '/app/users'
+    | '/auth/forget-password'
     | '/auth/register'
+    | '/auth/reset-password'
     | '/auth/verify-email'
     | '/app/posts/$id/edit'
     | '/app/users/$id/edit'
@@ -414,15 +456,17 @@ export interface FileRouteTypes {
     | '/'
     | '/app'
     | '/auth'
-    | '/auth/forget-password'
     | '/auth/login'
-    | '/auth/reset-password'
+    | '/auth/forget-password/success'
     | '/auth/register/success'
+    | '/auth/reset-password/success'
     | '/auth/verify-email/$status'
     | '/app/home/'
     | '/app/posts/'
     | '/app/users/'
+    | '/auth/forget-password/'
     | '/auth/register/'
+    | '/auth/reset-password/'
     | '/auth/verify-email/'
     | '/app/posts/$id/edit'
     | '/app/users/$id/edit'
@@ -476,29 +520,31 @@ export const routeTree = rootRoute
     "/auth": {
       "filePath": "auth/route.tsx",
       "children": [
-        "/auth/forget-password",
         "/auth/login",
-        "/auth/reset-password",
+        "/auth/forget-password/success",
         "/auth/register/success",
+        "/auth/reset-password/success",
         "/auth/verify-email/$status",
+        "/auth/forget-password/",
         "/auth/register/",
+        "/auth/reset-password/",
         "/auth/verify-email/"
       ]
-    },
-    "/auth/forget-password": {
-      "filePath": "auth/forget-password.tsx",
-      "parent": "/auth"
     },
     "/auth/login": {
       "filePath": "auth/login.tsx",
       "parent": "/auth"
     },
-    "/auth/reset-password": {
-      "filePath": "auth/reset-password.tsx",
+    "/auth/forget-password/success": {
+      "filePath": "auth/forget-password/success.tsx",
       "parent": "/auth"
     },
     "/auth/register/success": {
       "filePath": "auth/register/success.tsx",
+      "parent": "/auth"
+    },
+    "/auth/reset-password/success": {
+      "filePath": "auth/reset-password/success.tsx",
       "parent": "/auth"
     },
     "/auth/verify-email/$status": {
@@ -517,8 +563,16 @@ export const routeTree = rootRoute
       "filePath": "app/users/index.tsx",
       "parent": "/app"
     },
+    "/auth/forget-password/": {
+      "filePath": "auth/forget-password/index.tsx",
+      "parent": "/auth"
+    },
     "/auth/register/": {
       "filePath": "auth/register/index.tsx",
+      "parent": "/auth"
+    },
+    "/auth/reset-password/": {
+      "filePath": "auth/reset-password/index.tsx",
       "parent": "/auth"
     },
     "/auth/verify-email/": {
