@@ -60,7 +60,7 @@ export const LoginForm = ({ redirectFrom }: { redirectFrom?: string }) => {
       </CardHeader>
       <CardContent>
         <FormProvider {...form}>
-          <form
+          <Form
             className="space-y-6"
             onSubmit={form.handleSubmit(onSubmitHandler)}
           >
@@ -111,7 +111,7 @@ export const LoginForm = ({ redirectFrom }: { redirectFrom?: string }) => {
             >
               Login
             </Button>
-          </form>
+          </Form>
         </FormProvider>
       </CardContent>
       <CardFooter>

@@ -10,6 +10,7 @@ import {
 import {
   ForgetPasswordResponse,
   RegisterResponse,
+  ResetPasswordResponse,
   SendVerificationEmailResponse,
 } from "@/definitions/types/auth";
 import { ApiResponse, ValueOf } from "@/definitions/types/common";
@@ -55,7 +56,7 @@ export const authHttp = {
       },
     }),
   resetPassword: (body: ResetPasswordBody) =>
-    queryHelper({
+    queryHelper<ResetPasswordBody, ApiResponse<ResetPasswordResponse>>({
       method: "post",
       url: AUTH.RESET_PASSWORD,
       data: body,

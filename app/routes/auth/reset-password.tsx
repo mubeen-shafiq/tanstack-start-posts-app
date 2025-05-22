@@ -1,10 +1,20 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, redirect } from "@tanstack/react-router";
+import { ResetPasswordForm } from "../-components/auth/reset-password.form";
 
 export const Route = createFileRoute("/auth/reset-password")({
   component: ResetPasswordPage,
+  validateSearch: (search) => search as { token: string },
+  beforeLoad: ({ search }) => {
+    if (!search.token) throw redirect({ to: "/auth/login", replace: true });
+  },
 });
 
 function ResetPasswordPage() {
-  return <div>Hello "/_blankLayout/auth/reset-password"!</div>;
+  return (
+    <div className="grow flex justify-center items-center">
+      <div className="max-w-md w-full mx-auto">
+        <ResetPasswordForm />
+      </div>
+    </div>
+  );
 }
-

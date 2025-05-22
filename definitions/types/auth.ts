@@ -2,6 +2,10 @@ export type ForgetPasswordResponse = {
   redirectUrl: string;
 };
 
+export type ResetPasswordResponse = {
+  redirectUrl: string;
+};
+
 export type AuthPayload = {
   id: string;
 };
