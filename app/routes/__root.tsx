@@ -10,6 +10,8 @@ import appCss from "@/app/styles/app.css?url";
 import { QueryClient } from "@tanstack/react-query";
 import { Toaster } from "react-hot-toast";
 import { TooltipProvider } from "@radix-ui/react-tooltip";
+import { ThemeProvider } from "@/components/providers/theme-provider";
+import { AppTheme } from "@/definitions/enums/common";
 
 export const Route = createRootRouteWithContext<{
   queryClient: QueryClient;
@@ -32,10 +34,12 @@ export const Route = createRootRouteWithContext<{
 function RootComponent() {
   return (
     <RootDocument>
-      <TooltipProvider>
-        <Outlet />
-        <Toaster position="top-right" />
-      </TooltipProvider>
+      <ThemeProvider defaultTheme={AppTheme.System}>
+        <TooltipProvider>
+          <Outlet />
+          <Toaster position="top-right" />
+        </TooltipProvider>
+      </ThemeProvider>
     </RootDocument>
   );
 }

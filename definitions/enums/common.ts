@@ -8,3 +8,9 @@ export enum ErrorCodes {
   RateLimit = "rate-limit",
   InvalidToken = "invalid-token",
 }
+
+export enum AppTheme {
+  Light = "light",
+  Dark = "dark",
+  System = "system",
+}

@@ -1,7 +1,7 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
-@custom-variant dark (&:is(.dark *));
+@custom-variant dark (&:where(.dark, .dark *));
 
 @utility container {
   margin-inline: auto;
@@ -11,73 +11,115 @@
 
 :root {
   --radius: 0.5rem;
-  --background: oklch(0.96 0 0);
-  --foreground: oklch(0.141 0.005 285.823);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.141 0.005 285.823);
-  --primary: oklch(0.606 0.25 292.717);
-  --primary-foreground: oklch(0.969 0.016 293.756);
-  --accent: oklch(0.85 0.02 280);
-  --accent-foreground: oklch(0.25 0.01 280);
-  --secondary: oklch(0.93 0.005 285);
-  --secondary-foreground: oklch(0.22 0.005 285);
-  --popover: oklch(0.98 0.001 285);
-  --popover-foreground: oklch(0.15 0.005 285);
-  --muted: oklch(0.94 0.005 285);
-  --muted-foreground: oklch(0.42 0.01 285);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.9 0.004 286.32);
-  --input: oklch(0.92 0.004 286.32);
-  --ring: oklch(0.606 0.25 292.717);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.141 0.005 285.823);
-  --sidebar-primary: oklch(0.606 0.25 292.717);
-  --sidebar-primary-foreground: oklch(0.969 0.016 293.756);
-  --sidebar-accent: oklch(0.967 0.001 286.375);
-  --sidebar-accent-foreground: oklch(0.21 0.006 285.885);
-  --sidebar-border: oklch(0.92 0.004 286.32);
-  --sidebar-ring: oklch(0.606 0.25 292.717);
+
+  /* Base - Using Slate for a modern, cool gray feel */
+  --background: theme('colors.stone.50'); /* Light, slightly cool off-white */
+  --foreground: theme('colors.stone.800'); /* Dark gray for text */
+
+  /* Cards & Popovers - Often pure white or a very light distinct shade */
+  --card: theme('colors.white');
+  --card-foreground: var(--foreground);
+  --popover: var(--card);
+  --popover-foreground: var(--card-foreground);
+
+  /* Primary Action - Your original was a vibrant purple/magenta */
+  --primary: theme('colors.purple.600'); /* oklch(0.606 0.25 292.717) */
+  --primary-foreground: theme('colors.purple.50'); /* oklch(0.969 0.016 293.756) - very light for contrast */
+
+  /* Secondary Action / Elements - A lighter, less prominent interactive color or background */
+  --secondary: theme('colors.stone.200'); /* Light gray, for secondary buttons/backgrounds */
+  --secondary-foreground: theme('colors.stone.700'); /* Darker gray for text on secondary */
+
+  /* Accent - For highlights or alternative actions. Original was lavender-ish. */
+  --accent: theme('colors.violet.200'); /* oklch(0.85 0.02 280) - Light violet */
+  --accent-foreground: theme('colors.violet.800'); /* oklch(0.25 0.01 280) - Dark violet for text */
+
+  /* Muted - For less important text or subtle backgrounds */
+  --muted: theme('colors.stone.200'); /* Similar to secondary bg, or slightly lighter like stone.100 if on stone.50 */
+  --muted-foreground: theme('colors.stone.500'); /* Medium gray for subtle text */
+
+  /* Destructive Actions - Typically red */
+  --destructive: theme('colors.red.600'); /* oklch(0.577 0.245 27.325) */
+  --destructive-foreground: theme('colors.red.50'); /* Lightest red or white for contrast */
+
+  /* UI Structure */
+  --border: theme('colors.stone.300'); /* A visible but not overpowering border */
+  --input: theme('colors.stone.200');  /* Similar to border or card, distinct from background */
+  --ring: var(--primary); /* Focus ring based on primary */
+
+  /* Charts - Approximating hues and vibrancy */
+  --chart-1: theme('colors.amber.500');  /* oklch(0.646 0.222 41.116) - Orange/Yellow */
+  --chart-2: theme('colors.sky.500');    /* oklch(0.6 0.118 184.704) - Cyan/Light Blue */
+  --chart-3: theme('colors.blue.700');   /* oklch(0.398 0.07 227.392) - Darker Blue */
+  --chart-4: theme('colors.lime.400');   /* oklch(0.828 0.189 84.429) - Bright Yellow/Green */
+  --chart-5: theme('colors.yellow.400'); /* oklch(0.769 0.188 70.08) - Yellow */
+
+  /* Sidebar Specifics */
+  --sidebar: theme('colors.stone.50'); /* Very light, distinct from main bg if main is stone.100, or same as main bg */
+  --sidebar-foreground: var(--foreground);
+  --sidebar-primary: var(--primary);
+  --sidebar-primary-foreground: var(--primary-foreground);
+  --sidebar-accent: theme('colors.stone.200'); /* Accent for selected items, could be primary with opacity too */
+  --sidebar-accent-foreground: var(--primary); /* Text on sidebar accent, often primary color */
+  --sidebar-border: theme('colors.stone.200');
+  --sidebar-ring: var(--ring);
 }
 
 .dark {
-  --background: oklch(0.141 0.005 285.823);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.21 0.006 285.885);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.21 0.006 285.885);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.541 0.281 293.009);
-  --primary-foreground: oklch(0.969 0.016 293.756);
-  --secondary: oklch(0.274 0.006 286.033);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.274 0.006 286.033);
-  --muted-foreground: oklch(0.705 0.015 286.067);
-  --accent: oklch(0.274 0.006 286.033);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.541 0.281 293.009);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.21 0.006 285.885);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.541 0.281 293.009);
-  --sidebar-primary-foreground: oklch(0.969 0.016 293.756);
-  --sidebar-accent: oklch(0.274 0.006 286.033);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.541 0.281 293.009);
+  /* Base */
+  --background: theme('colors.stone.900'); /* Dark cool gray */
+  --foreground: theme('colors.stone.200'); /* Light gray for text */
+
+  /* Cards & Popovers */
+  --card: theme('colors.stone.800'); /* Slightly lighter than background */
+  --card-foreground: var(--foreground);
+  --popover: var(--card);
+  --popover-foreground: var(--card-foreground);
+
+  /* Primary Action */
+  --primary: theme('colors.purple.500'); /* oklch(0.541 0.281 293.009) - Slightly lighter/brighter purple for dark mode */
+  --primary-foreground: theme('colors.purple.50'); /* oklch(0.969 0.016 293.756) */
+
+  /* Secondary Action / Elements */
+  --secondary: theme('colors.stone.700'); /* Darker gray, distinct from card */
+  --secondary-foreground: var(--foreground);
+
+  /* Accent */
+  --accent: theme('colors.violet.700'); /* oklch(0.274 0.006 286.033) - Darker violet shade */
+  --accent-foreground: theme('colors.violet.100'); /* Lighter violet for text */
+
+  /* Muted */
+  --muted: theme('colors.stone.700'); /* Similar to secondary */
+  --muted-foreground: theme('colors.stone.400'); /* Lighter gray for muted text */
+
+  /* Destructive Actions */
+  --destructive: theme('colors.red.500'); /* oklch(0.704 0.191 22.216) - Brighter red for dark mode */
+  --destructive-foreground: theme('colors.red.50'); /* Lightest red or white */
+
+  /* UI Structure */
+  --border: theme('colors.stone.700'); /* Subtle border, lighter than card/bg elements */
+  --input: theme('colors.stone.700');   /* Input bg, could be same as border or secondary */
+  --ring: var(--primary);
+
+  /* Charts */
+  --chart-1: theme('colors.purple.600'); /* oklch(0.488 0.243 264.376) - was purple-ish */
+  --chart-2: theme('colors.teal.400');   /* oklch(0.696 0.17 162.48) - was teal-ish green */
+  --chart-3: theme('colors.yellow.400'); /* oklch(0.769 0.188 70.08) - kept from light, or make it amber.400 */
+  --chart-4: theme('colors.fuchsia.500');/* oklch(0.627 0.265 303.9) - magenta/fuchsia */
+  --chart-5: theme('colors.orange.500'); /* oklch(0.645 0.246 16.439) - reddish orange */
+
+  /* Sidebar Specifics */
+  --sidebar: theme('colors.stone.800'); /* Same as card or slightly different (e.g., stone.800 if card is stone.800, or stone.850 if that existed) */
+  --sidebar-foreground: var(--foreground);
+  --sidebar-primary: var(--primary);
+  --sidebar-primary-foreground: var(--primary-foreground);
+  --sidebar-accent: theme('colors.stone.700'); /* Accent for selected items */
+  --sidebar-accent-foreground: var(--primary);
+  --sidebar-border: theme('colors.stone.700'); /* Was oklch(1 0 0 / 10%) which is white at 10% opacity. stone.700 is a solid alternative. */
+  --sidebar-ring: var(--ring);
 }
 
+/* Your @theme inline block remains the same */
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -121,7 +163,15 @@
   * {
     @apply border-border outline-ring/50;
   }
+  html,
   body {
-    @apply bg-background text-foreground pl-[calc(100vw-100%)];
+    @apply h-full;
   }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+:root {
+  scrollbar-color: var(--muted-foreground) var(--background);
 }

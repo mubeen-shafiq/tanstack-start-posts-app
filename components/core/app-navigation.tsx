@@ -23,8 +23,10 @@ const navLinks = [
 
 export const AppNavigation = ({
   hideLinks = false,
+  isScrolled = false,
 }: {
   hideLinks?: boolean;
+  isScrolled?: boolean;
 }) => {
   const { session, logout } = useSession();
 
@@ -57,10 +59,11 @@ export const AppNavigation = ({
     if (session)
       return (
         <WrapTooltip
+          asChild
           trigger={
             <Button
               size="icon"
-              variant="outline"
+              variant="ghost"
               type="button"
               onClick={() => logout()}
             >
@@ -81,7 +84,7 @@ export const AppNavigation = ({
         </Button>
       </div>
     );
-  }, [session, logout]);
+  }, [session, logout, isScrolled]);
   return (
     <Comp {...(!hideLinks && { className: "flex gap-8 items-center" })}>
       {renderNavLinks()}
